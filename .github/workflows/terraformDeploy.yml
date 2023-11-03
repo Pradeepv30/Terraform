@@ -33,7 +33,7 @@ jobs:
     - name: Terraform apply
       id: apply
       #if: ${{ failure() && setps.plan.conclusion == 'failure' }}
-      if: setps.plan.conclusion == 'failure'
+      if: failure() && setps.plan.outcome == 'failure'
       run: echo "Please fix the errors in the template"
     
       
