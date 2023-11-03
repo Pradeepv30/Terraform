@@ -1,0 +1,40 @@
+name: Deploy Infra
+on:
+  push:
+
+jobs:
+  terrafrom_Deploy:
+    name: Deploy Infra
+    runs-on: ubuntu_latest
+    steps:
+    - uses: hashicorp/setup-terraform@v2
+      with: 
+        terraform_version: "1.1.7"
+        
+    - name: Checkout Repo
+      uses: actions/checkout@v1
+
+    - name: Terrafrom init
+      id: init
+      uses: hashicorp/terraform-github-actions/init@v0.4.0
+
+    - name: Terraform fmt
+      id: fmt
+      run: terrafrom fmt -check
+
+    - name: Terrafform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terrafrom Plan
+      id: plan
+      run: terraform paln -no-color
+
+    - name: Terraform apply
+      id: apply
+      if: ${{ failure() && setps.plan.outcome == 'failure' }}
+      run: echo "Please fix the errors in the template"
+    
+      
+      
+    
